@@ -23,6 +23,8 @@ scalacOptions ++= Seq(
 
 resolvers ++= Seq(Resolver.sonatypeRepo("releases"), Resolver.sonatypeRepo("snapshots"))
 
+libraryDependencies += "org.scala-lang" % "scala-swing" % "2.10+"
+
 libraryDependencies ++= Seq(
   "org.scalaz" %% "scalaz-core" % "7.0.6",
   "org.scalaz" %% "scalaz-concurrent" % "7.0.6",
