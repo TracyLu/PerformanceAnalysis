@@ -10,6 +10,8 @@ libraryDependencies += "org.scalaz.stream" %% "scalaz-stream" % "0.4.1"
 
 resolvers ++= Seq(Resolver.sonatypeRepo("releases"), Resolver.sonatypeRepo("snapshots"))
 
+resolvers += "JAnalyse Repository" at "http://www.janalyse.fr/repository/"
+
 scalacOptions ++= Seq(
   "-feature",
   "-deprecation",
@@ -33,3 +35,5 @@ libraryDependencies ++= Seq(
   "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
   "org.apache.commons" % "commons-io" % "1.3.2"
 )
+
+libraryDependencies += "fr.janalyse" %% "janalyse-ssh" % "0.9.10" % "compile"
