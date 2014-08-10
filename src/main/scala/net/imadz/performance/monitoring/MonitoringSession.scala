@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.io.{FileWriter, File}
 import scala.collection.mutable.ListBuffer
+import net.imadz.performance.DataConverter
 
 /**
  * Created by geek on 14-8-9.
@@ -18,6 +19,7 @@ case class MonitoringSession(val sessionName: String, val monitors: List[Monitor
       f
     } finally {
       monitors foreach (_.stop)
+      monitors foreach (_.process)
     }
   }
 }
@@ -44,6 +46,8 @@ class MonitoringSessionBuilder(val sessionName: String) {
 
 
 trait Monitor {
+  def process = DataConverter.ioconverterfunc(logFile.get, logFile.get + ".updated").run
+
   val format = new SimpleDateFormat("yyyyMMddhhmmss")
   val time = format.format(new Date);
   var logFilePath: Option[String] = None
@@ -87,6 +91,7 @@ trait Monitor {
   private def createFile(file: File) {
     if (!file.createNewFile) throw new IllegalStateException("Cannot create file : " + file.getAbsolutePath)
   }
+
 }
 
 abstract class SSHBased(implicit val sshOps: SSHOptions) extends Monitor {
