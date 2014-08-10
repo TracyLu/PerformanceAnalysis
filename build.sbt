@@ -1,4 +1,6 @@
-name := "PerformanceAnalysis"
+name := "perf-test-lib"
+
+organization := "net.imadz"
 
 version := "1.0"
 
@@ -37,3 +39,5 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += "fr.janalyse" %% "janalyse-ssh" % "0.9.10" % "compile"
+
+libraryDependencies +=  "com.typesafe.akka" %% "akka-actor" % "2.3.4"  withJavadoc() withSources()

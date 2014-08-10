@@ -10,16 +10,15 @@ import scala.collection.mutable.ListBuffer
 /**
  * Created by geek on 14-8-9.
  */
-class MonitoringSession(val sessionName: String, val monitors: List[Monitor]) {
+case class MonitoringSession(val sessionName: String, val monitors: List[Monitor]) {
 
   def run(f: => Unit) {
-    monitors foreach (_.start)
+    monitors foreach (_.start(sessionName))
     try {
       f
     } finally {
       monitors foreach (_.stop)
     }
-
   }
 }
 
@@ -45,59 +44,81 @@ class MonitoringSessionBuilder(val sessionName: String) {
 
 
 trait Monitor {
-  def start(): Unit
+  val format = new SimpleDateFormat("yyyyMMddhhmmss")
+  val time = format.format(new Date);
+  var logFilePath: Option[String] = None
 
-  def stop(): Unit
+  def start(sessionName: String): Unit
+
+  def stop: Unit
+
+  def name: String
+
+  def logFile = logFilePath
+
+  protected def fileWriter(sessionName: String) = {
+    logFilePath = Some(logFile(sessionName))
+    val file: File = new File(logFilePath.get)
+    prepareFile(file)
+    new FileWriter(file)
+  }
+
+  def logFile(sessionName: String): String = {
+    "report/" + time + File.separator + sessionName + File.separator + name + ".log"
+  }
+
+  private def prepareFile(file: File) {
+    if (!file.getParentFile.exists) {
+      if (file.getParentFile.mkdirs) {
+        if (!file.createNewFile) throw new IllegalStateException("Cannot create file : " + file.getAbsolutePath)
+      } else {
+        throw new IllegalStateException("Cannot create directory : " + file.getParent)
+      }
+    } else {
+      if (file.exists) {
+        if (file.delete) createFile(file)
+        else throw new IllegalStateException("Cannot delete file : " + file.getAbsolutePath)
+
+      }
+      else createFile(file)
+    }
+  }
+
+  private def createFile(file: File) {
+    if (!file.createNewFile) throw new IllegalStateException("Cannot create file : " + file.getAbsolutePath)
+  }
 }
 
 abstract class SSHBased(implicit val sshOps: SSHOptions) extends Monitor {
 
   lazy val ssh = SSH(sshOps)
 
-  lazy val fileWriter = {
-    lazy val format = new SimpleDateFormat("yyyyMMddhhmm")
-    val time = format.format(new Date);
-    val out = "report/" + time + "/" + name + ".log"
-    val file: File = new File(out)
-    def createFile {
-      if (!file.createNewFile) throw new IllegalStateException("Cannot create file : " + file.getAbsolutePath)
-    }
-    def prepareFile {
-      if (!file.getParentFile.exists) {
-        if (file.getParentFile.mkdirs) {
-          if (!file.createNewFile) throw new IllegalStateException("Cannot create file : " + file.getAbsolutePath)
-        } else {
-          throw new IllegalStateException("Cannot create directory : " + file.getParent)
-        }
-      } else {
-        if (file.exists) {
-          if (file.delete) createFile
-          else throw new IllegalStateException("Cannot delete file : " + file.getAbsolutePath)
-
-        }
-        else createFile
-      }
-    }
-    prepareFile
-    new FileWriter(file)
-  }
-
   def command: String
 
-  def name: String
 
-  override def start(): Unit = ssh.run(command, {
-    case ExecPart(content) => {
-      fileWriter.write(content + "\n")
-      fileWriter.flush
-    }
-    case ExecEnd(rc) => println(command + " rc = " + rc)
-    case ExecTimeout => println(command + " timeout ...")
-  })
+  override def start(sessionName: String): Unit = {
+    val writer = fileWriter(sessionName)
+    ssh.run(command, {
+      case ExecPart(content) => {
+        writer.write(content + "\n")
+        writer.flush
+      }
+      case ExecEnd(rc) => {
+        println(command + " rc = " + rc)
+        writer.close
+      }
+      case ExecTimeout => {
+        println(command + " timeout ...")
+        writer.close
+      }
+    })
+
+  }
 
   override def stop(): Unit = {
     ssh.close
   }
+
 }
 
 class CpuMonitor(val interval: Int)(implicit sshOps: SSHOptions) extends SSHBased {
