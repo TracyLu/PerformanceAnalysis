@@ -2,11 +2,12 @@ package net.imadz.performance.graph
 
 import javax.swing.JComponent
 import java.awt.{Font, Color, Graphics, Dimension}
+import net.imadz.performance.metadata.SourceMetadata
 
 /**
  * Created by geek on 14-8-8.
  */
-class PGraph(val perfDataSources: List[List[Double]]) extends JComponent {
+class PGraph(val sourceMetadata: SourceMetadata, val perfDataSources: List[(String, List[Double])]) extends JComponent {
 
   val minWidth = 400
   val minHeight = 200
@@ -16,7 +17,7 @@ class PGraph(val perfDataSources: List[List[Double]]) extends JComponent {
   val yScaleCount = 10
   val xScaleCount = 30
 
-  def xScaleMax : Int = perfDataSources.map(_.length).foldLeft(0)((acc, x) => Math.max(acc, x))
+  def xScaleMax : Int = perfDataSources.map(_._2.length).foldLeft(0)((acc, x) => Math.max(acc,x))
 
   def screenSize = getSize(null)
 
@@ -26,7 +27,7 @@ class PGraph(val perfDataSources: List[List[Double]]) extends JComponent {
 
   def yBottomLine = imageHeight + margin toInt
 
-  def yMaxSampleDataSetValue = perfDataSources.flatten.foldLeft(0D)((acc, x) => Math.max(acc, x))
+  def yMaxSampleDataSetValue = perfDataSources.map(x => x._2).flatten.foldLeft(0D)((acc, x) => Math.max(acc, x))
   def xMaxSampleDataSetLength = xScaleMax
   def heightFactor = imageHeight.toDouble / yMaxSampleDataSetValue
   def widthFactor = imageWidth.toDouble / xMaxSampleDataSetLength
@@ -46,13 +47,31 @@ class PGraph(val perfDataSources: List[List[Double]]) extends JComponent {
     var streamIndex = 0;
     perfDataSources foreach { streamSource =>
       g.setColor(colors(streamIndex))
-      val (xs, ys) = coordernatesOf(streamSource)
-      g.drawPolyline(xs, ys, streamSource.length)
+      val (xs, ys) = coordernatesOf(streamSource._2)
+      g.drawPolyline(xs, ys, streamSource._2.length)
+      drawLabel(g, streamIndex, streamSource._1)
       streamIndex += 1
     }
 
+    drawTitle(g)
   }
 
+  def drawTitle(g: Graphics) {
+    g.setColor(Color.DARK_GRAY)
+    g.setFont(new Font("default", Font.BOLD, 16));
+    g.drawString(sourceMetadata.aspect.getClass.getSimpleName, (imageWidth / 2).toInt, (1 * imageHeight / 5).toInt)
+  }
+
+  def drawLabel(g: Graphics, streamIndex: Int, streamSourceName: String) {
+    val streamSourceNameX: Double = imageWidth - 100
+    val streamSourceNameY: Double = imageHeight - 100 + streamIndex * 10
+
+    val shortLineY: Double = streamSourceNameY  - 2
+    val shortLineX1: Double = streamSourceNameX - 20
+    val shortLineX2: Double = streamSourceNameX - 10
+    g.drawLine(shortLineX1.toInt, shortLineY.toInt, shortLineX2.toInt, shortLineY.toInt)
+    g.drawString(streamSourceName, streamSourceNameX.toInt, streamSourceNameY.toInt)
+  }
 
   lazy val yScalePixel = (0 until yScaleCount).toList.map { y => imageHeight - y * imageHeight / yScaleCount toInt} toArray
 
