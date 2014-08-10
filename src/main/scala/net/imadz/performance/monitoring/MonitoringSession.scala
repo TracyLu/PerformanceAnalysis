@@ -64,7 +64,7 @@ trait Monitor {
   }
 
   def logFile(sessionName: String): String = {
-    "report/" + time + File.separator + sessionName + File.separator + name + ".log"
+    ("report/" + time + File.separator + sessionName + File.separator + name + ".log") replaceAll(" +", "_")
   }
 
   private def prepareFile(file: File) {
