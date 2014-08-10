@@ -59,7 +59,7 @@ class PGraph(val sourceMetadata: SourceMetadata, val perfDataSources: List[(Stri
   def drawTitle(g: Graphics) {
     g.setColor(Color.DARK_GRAY)
     g.setFont(new Font("default", Font.BOLD, 16));
-    g.drawString(sourceMetadata.aspect.getClass.getSimpleName, (imageWidth / 2).toInt, (1 * imageHeight / 5).toInt)
+    g.drawString(sourceMetadata.aspect.getClass.getSimpleName + "--" + sourceMetadata.dimensionName, (imageWidth / 2).toInt, (1 * imageHeight / 5).toInt)
   }
 
   def drawLabel(g: Graphics, streamIndex: Int, streamSourceName: String) {
