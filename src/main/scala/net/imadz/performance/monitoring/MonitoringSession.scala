@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.io.{FileWriter, File}
 import scala.collection.mutable.ListBuffer
-import net.imadz.performance.DataConverter
+import net.imadz.performance.{PerformanceDataUI, DataConverter}
 
 /**
  * Created by geek on 14-8-9.
@@ -39,14 +39,17 @@ class MonitoringSessionBuilder(val sessionName: String) {
     this
   }
 
-  def run(f: => Unit): Unit = {
+  def run(f: => Unit): List[Monitor] = {
     new MonitoringSession(sessionName, monitors.toList) run f
+    monitors.toList
   }
 }
 
 
 trait Monitor {
-  def process = DataConverter.ioconverterfunc(logFile.get, logFile.get + ".updated").run
+  def process = {
+    DataConverter.ioconverterfunc(logFile.get, logFile.get + ".updated").run
+  }
 
   val format = new SimpleDateFormat("yyyyMMddhhmmss")
   val time = format.format(new Date);
@@ -125,7 +128,10 @@ abstract class SSHBased(implicit val sshOps: SSHOptions) extends Monitor {
   }
 
 }
-
+class RestartMysql(implicit sshOps: SSHOptions) extends SSHBased {
+  override def command = "sudo restart mysql"
+  override def name = "restart_mysql"
+}
 class CpuMonitor(val interval: Int)(implicit sshOps: SSHOptions) extends SSHBased {
   override def command = "mpstat " + interval
 

@@ -13,20 +13,22 @@ import net.imadz.performance.metadata.{DiskIO, SourceMetadata}
  */
 object PerformanceDataUI extends SimpleSwingApplication {
 
+  var sourceFile1 = ""
+  var sourceFile2 = ""
+  def setSourceFile1(filePath: String) = sourceFile1 = filePath
+  def setSourceFile2(filePath: String)=  sourceFile2 = filePath
+
   def perfData(col: Int): List[(String, List[Double])] = {
 
-    val firstdata = Source.fromFile("/Users/Scala/Workspaces/multitenant-uuid/report/20140810052524/Query_a˜gainst_AutoIncremental_PK/io.log.updated").getLines().drop(1).map { line =>
+    val firstdata = Source.fromFile(sourceFile1).getLines().drop(1).map { line =>
       parseDouble(line.split("\t")(col)).toOption.get
     }.toList
 
-    val seconddata = Source.fromFile("/Users/Scala/Workspaces/multitenant-uuid/report/20140810052337/Query_against_Binary_UUID/io.log.updated").getLines().drop(1).map { line =>
+    val seconddata = Source.fromFile(sourceFile2).getLines().drop(1).map { line =>
       parseDouble(line.split("\t")(col)).toOption.get
     }.toList
 
-//    val thirddata = Source.fromFile("testdata/handled/binary_io.log").getLines().drop(1).map { line =>
-//      parseDouble(line.split("\t")(9)).toOption.get
-//    }.toList
-    List(("autoincremental", firstdata),("binary", seconddata))
+    List(("autoincremental", seconddata),("binary", firstdata))
   }
 
   def sourceMetadata(dimensionName: String) = new SourceMetadata(DiskIO(), dimensionName)
