@@ -22,7 +22,7 @@ object DataConverter{
       space2tab
     }
     var data: Process[Task, String] = linesR
-      .filter { x => !x.startsWith("Linux") && !x.trim.isEmpty && !x.startsWith("Device")}
+      .filter { x => !x.startsWith("Linux") && !x.trim.isEmpty && !x.startsWith("Device") && !x.contains("%")}
       .map(space2tab)
     if (dropLines > 0) data = data.drop(dropLines)
     if (wantedLines > 0) data = data.take(wantedLines)
