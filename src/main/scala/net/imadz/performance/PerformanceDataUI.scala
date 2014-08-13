@@ -9,7 +9,6 @@ import net.imadz.performance.graph.PGraph
 import net.imadz.performance.metadata.DiskIO
 import scala.swing.Component._
 import java.awt.image.BufferedImage
-import java.awt.Graphics2D
 import javax.imageio.ImageIO
 import java.io.File
 
@@ -23,6 +22,10 @@ object PerformanceDataUI extends SimpleSwingApplication {
   val sourceFile3 = "testdata/Query_against_16Char/io.log.updated"
 
   val sources = sourceFile1 :: sourceFile2 :: sourceFile3 :: Nil
+
+  val header = Source.fromFile(sources.head).getLines().take(1).toList.head.split("\t")
+  val validcolumns = header.drop(1)
+  val validcolumnpairs = 1 to header.length zip validcolumns
 
   def perfData(col: Int): List[(String, List[Double])] = {
 
@@ -41,21 +44,10 @@ object PerformanceDataUI extends SimpleSwingApplication {
 
   def top = new MainFrame {
 
-
-    private val gridPanel: GridPanel = new GridPanel(14, 1) {
-      contents += wrap(new PGraph(sourceMetadata("%util"), perfData(13)))
-      contents += wrap(new PGraph(sourceMetadata("svctm"), perfData(12)))
-      contents += wrap(new PGraph(sourceMetadata("w_await"), perfData(11)))
-      contents += wrap(new PGraph(sourceMetadata("r_await"), perfData(10)))
-      contents += wrap(new PGraph(sourceMetadata("await"), perfData(9)))
-      contents += wrap(new PGraph(sourceMetadata("avgqu-sz"), perfData(8)))
-      contents += wrap(new PGraph(sourceMetadata("avgrq-sz"), perfData(7)))
-      contents += wrap(new PGraph(sourceMetadata("wKB/s"), perfData(6)))
-      contents += wrap(new PGraph(sourceMetadata("rKB/s"), perfData(5)))
-      contents += wrap(new PGraph(sourceMetadata("w/s"), perfData(4)))
-      contents += wrap(new PGraph(sourceMetadata("r/s"), perfData(3)))
-      contents += wrap(new PGraph(sourceMetadata("wrqm/s"), perfData(2)))
-      contents += wrap(new PGraph(sourceMetadata("rrqm/s"), perfData(1)))
+    private val gridPanel: GridPanel = new GridPanel(validcolumns.length, 1) {
+      validcolumnpairs foreach (
+        x => contents += wrap(new PGraph(sourceMetadata(x._2), perfData(x._1)))
+        )
     }
     contents = new scala.swing.ScrollPane(gridPanel)
 
