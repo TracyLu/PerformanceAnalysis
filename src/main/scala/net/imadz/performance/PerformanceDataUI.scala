@@ -17,21 +17,32 @@ import java.io.File
  */
 object PerformanceDataUI extends SimpleSwingApplication {
 
-  val sourceFile1 = "testdata/Query_against_Binary_UUID/io.log.updated"
-  val sourceFile2 = "testdata/Query_against_AutoIncremental_PK/io.log.updated"
-  val sourceFile3 = "testdata/Query_against_16Char/io.log.updated"
+  val sourceFile1 = "report/Query_against_Binary_UUID/io.log.updated"
+  val sourceFile2 = "report/Query_against_AutoIncremental_PK/io.log.updated"
+  val sourceFile3 = "report/Query_against_16Char/io.log.updated"
 
-  val sources = sourceFile1 :: sourceFile2 :: sourceFile3 :: Nil
+  val intialSources = sourceFile1 :: sourceFile2 :: sourceFile3 :: Nil
 
-  val header = Source.fromFile(sources.head).getLines().take(1).toList.head.split("\t")
-  val validcolumns = header.drop(1)
-  val validcolumnpairs = 1 to header.length zip validcolumns
+  var __sources = intialSources
+
+  def sources = __sources
+  def sources_=(files: List[String]) {
+    __sources = files
+  }
+
+  def header = Source.fromFile(sources.head).getLines().take(1).toList.head.split("\t")
+
+  def validcolumns = header.drop(1)
+
+  def validcolumnpairs = 1 to header.length zip validcolumns
 
   def perfData(col: Int): List[(String, List[Double])] = {
 
     val data = sources map { source =>
       Source.fromFile(source).getLines().drop(1).map { line =>
-        parseDouble(line.split("\t")(col)).toOption.get
+        val split: Array[String] = line.split("\t")
+        if (split.length - 1 < col) 0.0D
+        else parseDouble(split(col)).toOption.get
       }.toList
     }
 
@@ -51,7 +62,7 @@ object PerformanceDataUI extends SimpleSwingApplication {
     }
     contents = new scala.swing.ScrollPane(gridPanel)
 
-    size = new Dimension(800, 600)
+    size = java.awt.Toolkit.getDefaultToolkit.getScreenSize
     visible = true
 
     val bi = new BufferedImage(gridPanel.size.getWidth.toInt, gridPanel.size.getHeight.toInt, BufferedImage.TYPE_INT_ARGB);
