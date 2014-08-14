@@ -23,4 +23,34 @@ object DataConverterTest extends Properties("DataImport") {
     converter.run
     true
   }
+  property("cpu convert") = secure {
+    val sourceFileName = "testdata/cpu.log";
+    val targetFileName = "testdata/handled/cpu.log";
+
+    val converter: Task[Unit] =
+      DataConverter.ioconverterfunc(sourceFileName, targetFileName)
+
+    converter.run
+    true
+  }
+  property("memory convert") = secure {
+    val sourceFileName = "testdata/mem.log";
+    val targetFileName = "testdata/handled/mem.log";
+
+    val converter: Task[Unit] =
+      DataConverter.ioconverterfunc(sourceFileName, targetFileName)
+
+    converter.run
+    true
+  }
+  property("network convert") = secure {
+    val sourceFileName = "testdata/network.log";
+    val targetFileName = "testdata/handled/network.log";
+
+    val converter: Task[Unit] =
+      DataConverter.ioconverterfunc(sourceFileName, targetFileName)
+
+    converter.run
+    true
+  }
 }
