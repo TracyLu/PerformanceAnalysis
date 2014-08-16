@@ -17,15 +17,24 @@ import java.io.File
  */
 object PerformanceDataUI extends SimpleSwingApplication {
 
-  val sourceFile1 = "report/Query_against_Binary_UUID/io.log.updated"
-  val sourceFile2 = "report/Query_against_AutoIncremental_PK/io.log.updated"
-  val sourceFile3 = "report/Query_against_16Char/io.log.updated"
+  //  val sourceFile1 = "report/20140815032932/Query_against_Binary_UUID/network.log.updated"
+  //  val sourceFile2 = "report/20140815033054/Query_against_AutoIncremental_PK/network.log.updated"
+  //  val sourceFile3 = "report/20140815033442/Query_against_Hex_PK/network.log.updated"
+  val sourceFile1 = "report/20140815050213/Query_against_Binary_UUID/io.log.updated"
+  val sourceFile2 = "report/20140815050435/Query_against_AutoIncremental_PK/io.log.updated"
+  //val sourceFile3 = "report/20140815044217/Query_against_Hex_PK/io.log.updated"
 
-  val intialSources = sourceFile1 :: sourceFile2 :: sourceFile3 :: Nil
+  //  val sourceFile1 = "report/20140815032932/Query_against_Binary_UUID/io.log.updated"
+  //  val sourceFile2 = "report/20140815033054/Query_against_AutoIncremental_PK/io.log.updated"
+  //  val sourceFile3 = "report/20140815033442/Query_against_Hex_PK/io.log.updated"
+
+  val intialSources = sourceFile1 :: sourceFile2 :: Nil //sourceFile3 :: Nil
+  //  val intialSources = sourceFile1 :: sourceFile2 :: sourceFile3 :: Nil
 
   var __sources = intialSources
 
   def sources = __sources
+
   def sources_=(files: List[String]) {
     __sources = files
   }
@@ -42,7 +51,11 @@ object PerformanceDataUI extends SimpleSwingApplication {
       Source.fromFile(source).getLines().drop(1).map { line =>
         val split: Array[String] = line.split("\t")
         if (split.length - 1 < col) 0.0D
-        else parseDouble(split(col)).toOption.get
+        else {
+          val d = parseDouble(split(col)).toOption
+          if (d.isDefined) d.get
+          else 0.0D
+        }
       }.toList
     }
 
