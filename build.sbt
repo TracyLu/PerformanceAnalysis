@@ -14,6 +14,10 @@ resolvers ++= Seq(Resolver.sonatypeRepo("releases"), Resolver.sonatypeRepo("snap
 
 resolvers += "JAnalyse Repository" at "http://www.janalyse.fr/repository/"
 
+resolvers += "Eclipselink" at "http://download.eclipse.org/rt/eclipselink/maven.repo/"
+
+resolvers += "Glassfish" at "http://download.java.net/maven/glassfish/"
+
 scalacOptions ++= Seq(
   "-feature",
   "-deprecation",
@@ -41,3 +45,11 @@ libraryDependencies ++= Seq(
 libraryDependencies += "fr.janalyse" %% "janalyse-ssh" % "0.9.10" % "compile"
 
 libraryDependencies +=  "com.typesafe.akka" %% "akka-actor" % "2.3.4"  withJavadoc() withSources()
+
+resolvers += "spray" at "http://repo.spray.io/"
+
+libraryDependencies += "io.spray" %%  "spray-json" % "1.2.6"
+
+libraryDependencies += "org.eclipse.persistence" % "org.eclipse.persistence.moxy" % "2.5.2" withSources()
+
+libraryDependencies += "org.projectlombok" % "lombok" % "1.14.4" withJavadoc() withSources()

@@ -2,7 +2,7 @@ import net.imadz.performance.DataConverter
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
 import scalaz.concurrent.Task
-import scalaz.stream.{text, io}
+import scalaz.stream.text
 
 /**
  * Created by Scala on 14-8-7.

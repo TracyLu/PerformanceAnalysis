@@ -4,7 +4,6 @@ import javax.swing.JComponent
 import java.awt.{Font, Color, Graphics, Dimension}
 import net.imadz.performance.metadata.SourceMetadata
 import java.text.NumberFormat
-import java.util.Locale
 
 /**
  * Created by geek on 14-8-8.

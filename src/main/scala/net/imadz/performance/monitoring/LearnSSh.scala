@@ -4,8 +4,7 @@ import fr.janalyse.ssh.{SSHPassword, ExecTimeout, ExecPart, ExecEnd}
 import jassh._
 import java.text.SimpleDateFormat
 import java.util.Date
-import java.io.{FileWriter, File}
-import scala.collection.mutable.ListBuffer
+import java.io.File
 import net.imadz.performance.{PerformanceDataUI, DataConverter}
 /**
  * Created by Scala on 14-8-11.

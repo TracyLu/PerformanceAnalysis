@@ -11,6 +11,7 @@ import scala.swing.Component._
 import java.awt.image.BufferedImage
 import javax.imageio.ImageIO
 import java.io.File
+import javax.swing.JTree
 
 /**
  * Created by geek on 14-8-8.
@@ -65,6 +66,7 @@ object PerformanceDataUI extends SimpleSwingApplication {
 
   def sourceMetadata(dimensionName: String) = new SourceMetadata(DiskIO(), dimensionName)
 
+  val tree = new JTree
 
   def top = new MainFrame {
 
@@ -73,7 +75,18 @@ object PerformanceDataUI extends SimpleSwingApplication {
         x => contents += wrap(new PGraph(sourceMetadata(x._2), perfData(x._1)))
         )
     }
-    contents = new scala.swing.ScrollPane(gridPanel)
+
+    val scrollPanel = new scala.swing.ScrollPane(gridPanel)
+
+    menuBar = new MenuBar {
+      contents += new Menu("File") {
+        contents += new MenuItem(Action("FileAction") {})
+        contents += new MenuItem(Action("Exit") {System.exit(0)})
+      }
+    }
+
+    contents = new SplitPane(Orientation.Vertical, wrap(tree), scrollPanel)
+
 
     size = java.awt.Toolkit.getDefaultToolkit.getScreenSize
     visible = true
@@ -82,6 +95,9 @@ object PerformanceDataUI extends SimpleSwingApplication {
     val g2d = bi.createGraphics();
     gridPanel.paint(g2d);
     ImageIO.write(bi, "PNG", new File("frame.png"));
+
+
   }
+
 
 }
