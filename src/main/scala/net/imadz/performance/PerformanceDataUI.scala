@@ -20,17 +20,38 @@ object PerformanceDataUI extends SimpleSwingApplication {
 
   //  val sourceFile1 = "report/20140815032932/Query_against_Binary_UUID/network.log.updated"
   //  val sourceFile2 = "report/20140815033054/Query_against_AutoIncremental_PK/network.log.updated"
-  //  val sourceFile3 = "report/20140815033442/Query_against_Hex_PK/network.log.updated"
-  val sourceFile1 = "report/20140815050213/Query_against_Binary_UUID/io.log.updated"
-  val sourceFile2 = "report/20140815050435/Query_against_AutoIncremental_PK/io.log.updated"
+  val sourceFile1 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080251/Binary_UUID/io.log.updated"
+  val sourceFile2 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080337/AutoIncremental_PK/io.log.updated"
+  val sourceFile3 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080813/Hex_PK/io.log.updated"
+  val sourceFile4 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309081315/Combo_PK/io.log.updated"
+
+
+  val sourceFile11 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080251/Binary_UUID/cpu.log.updated"
+  val sourceFile12 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080337/AutoIncremental_PK/cpu.log.updated"
+  val sourceFile13 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080813/Hex_PK/cpu.log.updated"
+  val sourceFile14 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309081315/Combo_PK/cpu.log.updated"
+
+  val sourceFile21 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080251/Binary_UUID/network.log.updated"
+  val sourceFile22 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080337/AutoIncremental_PK/network.log.updated"
+  val sourceFile23 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080813/Hex_PK/network.log.updated"
+  val sourceFile24 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309081315/Combo_PK/network.log.updated"
+
+  val sourceFile31 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080251/Binary_UUID/mem.log.updated"
+  val sourceFile32 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080337/AutoIncremental_PK/mem.log.updated"
+  val sourceFile33 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309080813/Hex_PK/mem.log.updated"
+  val sourceFile34 = "/Users/Eventbank/Workspaces/multitenant-uuid/report/20160309081315/Combo_PK/mem.log.updated"
   //val sourceFile3 = "report/20140815044217/Query_against_Hex_PK/io.log.updated"
 
   //  val sourceFile1 = "report/20140815032932/Query_against_Binary_UUID/io.log.updated"
   //  val sourceFile2 = "report/20140815033054/Query_against_AutoIncremental_PK/io.log.updated"
   //  val sourceFile3 = "report/20140815033442/Query_against_Hex_PK/io.log.updated"
 
-  val intialSources = sourceFile1 :: sourceFile2 :: Nil //sourceFile3 :: Nil
-  //  val intialSources = sourceFile1 :: sourceFile2 :: sourceFile3 :: Nil
+  val intialSources =  // sourceFile11 :: sourceFile12 :: sourceFile13 :: Nil
+//    sourceFile11 :: sourceFile12 :: sourceFile13 :: sourceFile14 :: Nil
+
+//      sourceFile21 :: sourceFile22 :: sourceFile23 :: sourceFile24 :: Nil
+      sourceFile31 :: sourceFile32 :: sourceFile33 :: sourceFile34 :: Nil
+//    val intialSources = sourceFile1 :: sourceFile2 :: sourceFile3 :: Nil
 
   var __sources = intialSources
 

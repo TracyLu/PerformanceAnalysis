@@ -4,6 +4,7 @@ import javax.swing.JComponent
 import java.awt.{Font, Color, Graphics, Dimension}
 import net.imadz.performance.metadata.SourceMetadata
 import java.text.NumberFormat
+import java.io.File
 
 /**
  * Created by geek on 14-8-8.
@@ -34,7 +35,9 @@ class PGraph(val sourceMetadata: SourceMetadata, val perfDataSources: List[(Stri
   def heightFactor = imageHeight.toDouble / yMaxSampleDataSetValue
   def widthFactor = imageWidth.toDouble / xMaxSampleDataSetLength
 
-  val colors = Array(Color.RED, Color.BLUE, Color.ORANGE, Color.BLACK, Color.GREEN)
+  val colors = Array(Color.RED, Color.BLUE, Color.ORANGE, Color.BLACK, Color.GREEN,
+                     Color.DARK_GRAY, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE,
+                     Color.PINK, Color.YELLOW)
 
   def coordernatesOf(source: List[Double]) = {
     val xs: Array[Int] = 1 to source.length map (x => leftMargin + x * widthFactor toInt) toArray
@@ -55,11 +58,16 @@ class PGraph(val sourceMetadata: SourceMetadata, val perfDataSources: List[(Stri
       g.setColor(colors(streamIndex))
       val (xs, ys) = coordernatesOf(streamSource._2)
       g.drawPolyline(xs, ys, streamSource._2.length)
-      drawLabel(g, streamIndex, streamSource._1)
+      drawLabel(g, streamIndex, identity(streamSource._1))
       streamIndex += 1
     }
 
     drawTitle(g)
+  }
+
+  private def identity(filePath: String): String = {
+    val file = new File(filePath)
+    file.getParentFile.getName + " / " + file.getName.split("\\.")(0)
   }
 
   def drawTitle(g: Graphics) {
