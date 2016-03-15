@@ -20,20 +20,20 @@ class PGraph(val sourceMetadata: SourceMetadata, val perfDataSources: List[(Stri
   val xScaleCount = 10
   val leftMargin: Int = 1.5 * margin toInt
 
-  def xScaleMax : Int = perfDataSources.map(_._2.length).foldLeft(0)((acc, x) => Math.max(acc,x))
+  lazy val xScaleMax : Int = perfDataSources.map(_._2.length).foldLeft(0)((acc, x) => Math.max(acc,x))
 
-  def screenSize = getSize(null)
+  lazy val screenSize = getSize(null)
 
-  def imageWidth = screenSize.getWidth() - margin - leftMargin;
+  lazy val imageWidth = screenSize.getWidth() - margin - leftMargin;
 
-  def imageHeight = screenSize.getHeight() - 2 * margin;
+  lazy val imageHeight = screenSize.getHeight() - 2 * margin;
 
-  def yBottomLine = imageHeight + margin toInt
+  lazy val yBottomLine = imageHeight + margin toInt
 
-  def yMaxSampleDataSetValue = perfDataSources.map(x => x._2).flatten.foldLeft(0D)((acc, x) => Math.max(acc, x))
-  def xMaxSampleDataSetLength = xScaleMax
-  def heightFactor = imageHeight.toDouble / yMaxSampleDataSetValue
-  def widthFactor = imageWidth.toDouble / xMaxSampleDataSetLength
+  lazy val yMaxSampleDataSetValue = perfDataSources.map(x => x._2).flatten.foldLeft(0D)((acc, x) => Math.max(acc, x))
+  lazy val xMaxSampleDataSetLength = xScaleMax
+  lazy val heightFactor = imageHeight.toDouble / yMaxSampleDataSetValue
+  lazy val widthFactor = imageWidth.toDouble / xMaxSampleDataSetLength
 
   val colors = Array(Color.RED, Color.BLUE, Color.ORANGE, Color.BLACK, Color.GREEN,
                      Color.DARK_GRAY, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE,
