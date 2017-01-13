@@ -4,7 +4,7 @@ import javax.swing.JComponent
 import java.awt.{Font, Color, Graphics, Dimension}
 import net.imadz.performance.metadata.SourceMetadata
 import java.text.NumberFormat
-import java.util.Locale
+import java.io.File
 
 /**
  * Created by geek on 14-8-8.
@@ -20,22 +20,24 @@ class PGraph(val sourceMetadata: SourceMetadata, val perfDataSources: List[(Stri
   val xScaleCount = 10
   val leftMargin: Int = 1.5 * margin toInt
 
-  def xScaleMax : Int = perfDataSources.map(_._2.length).foldLeft(0)((acc, x) => Math.max(acc,x))
+  lazy val xScaleMax : Int = perfDataSources.map(_._2.length).foldLeft(0)((acc, x) => Math.max(acc,x))
 
-  def screenSize = getSize(null)
+  lazy val screenSize = getSize(null)
 
-  def imageWidth = screenSize.getWidth() - margin - leftMargin;
+  lazy val imageWidth = screenSize.getWidth() - margin - leftMargin;
 
-  def imageHeight = screenSize.getHeight() - 2 * margin;
+  lazy val imageHeight = screenSize.getHeight() - 2 * margin;
 
-  def yBottomLine = imageHeight + margin toInt
+  lazy val yBottomLine = imageHeight + margin toInt
 
-  def yMaxSampleDataSetValue = perfDataSources.map(x => x._2).flatten.foldLeft(0D)((acc, x) => Math.max(acc, x))
-  def xMaxSampleDataSetLength = xScaleMax
-  def heightFactor = imageHeight.toDouble / yMaxSampleDataSetValue
-  def widthFactor = imageWidth.toDouble / xMaxSampleDataSetLength
+  lazy val yMaxSampleDataSetValue = perfDataSources.map(x => x._2).flatten.foldLeft(0D)((acc, x) => Math.max(acc, x))
+  lazy val xMaxSampleDataSetLength = xScaleMax
+  lazy val heightFactor = imageHeight.toDouble / yMaxSampleDataSetValue
+  lazy val widthFactor = imageWidth.toDouble / xMaxSampleDataSetLength
 
-  val colors = Array(Color.RED, Color.BLUE, Color.ORANGE, Color.BLACK, Color.GREEN)
+  val colors = Array(Color.RED, Color.BLUE, Color.ORANGE, Color.BLACK, Color.GREEN,
+                     Color.DARK_GRAY, Color.LIGHT_GRAY, Color.MAGENTA, Color.ORANGE,
+                     Color.PINK, Color.YELLOW)
 
   def coordernatesOf(source: List[Double]) = {
     val xs: Array[Int] = 1 to source.length map (x => leftMargin + x * widthFactor toInt) toArray
@@ -56,11 +58,16 @@ class PGraph(val sourceMetadata: SourceMetadata, val perfDataSources: List[(Stri
       g.setColor(colors(streamIndex))
       val (xs, ys) = coordernatesOf(streamSource._2)
       g.drawPolyline(xs, ys, streamSource._2.length)
-      drawLabel(g, streamIndex, streamSource._1)
+      drawLabel(g, streamIndex, identity(streamSource._1))
       streamIndex += 1
     }
 
     drawTitle(g)
+  }
+
+  private def identity(filePath: String): String = {
+    val file = new File(filePath)
+    file.getParentFile.getName + " / " + file.getName.split("\\.")(0)
   }
 
   def drawTitle(g: Graphics) {

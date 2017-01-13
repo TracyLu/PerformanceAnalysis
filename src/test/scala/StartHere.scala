@@ -3,11 +3,7 @@
  */
 import org.scalacheck._
 import Prop._
-import scalaz.concurrent.Task
 import scodec.bits.ByteVector
-
-import scala.io.Source
-import scalaz.std.string._
 import scalaz.stream._
 import scalaz.concurrent.Task
 

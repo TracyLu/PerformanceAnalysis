@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.io.{FileWriter, File}
 import scala.collection.mutable.ListBuffer
-import net.imadz.performance.{PerformanceDataUI, DataConverter}
+import net.imadz.performance.DataConverter
 
 /**
  * Created by geek on 14-8-9.
